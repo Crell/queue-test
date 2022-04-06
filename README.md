@@ -2,6 +2,8 @@
 
 Just messing about with queue systems. Do not use.
 
+A related Symfony example: https://github.com/weaverryan/messenger-standalone/
+
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.

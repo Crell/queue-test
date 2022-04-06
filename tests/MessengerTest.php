@@ -20,6 +20,7 @@ use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 
 use Doctrine\DBAL\Connection as DBALConnection;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
+use Symfony\Component\Messenger\Worker;
 
 class MessengerTest extends TestCase
 {
@@ -60,15 +61,7 @@ class MessengerTest extends TestCase
 
         $dbConn = $this->getConnection();
 
-        $msgConn = new Connection([
-            'table' => 'queue',
-            'queue_name' => 'test',
-            ], $dbConn);
-
-        $doctrineSender = new DoctrineSender($msgConn);
-
         $container = new MockContainer();
-        $container->addService('mysender', $doctrineSender);
 
         $phpSerializer = new PhpSerializer();
 
@@ -89,8 +82,8 @@ class MessengerTest extends TestCase
             'auto_setup' => true,
         ], $dbConn);
 
-        $doctrineConnection->setup();
-        $doctrineFailedConnection->setup();
+//        $doctrineConnection->setup();
+//        $doctrineFailedConnection->setup();
 
         $doctrineFailedTransport = new DoctrineTransport(
             $doctrineFailedConnection,
@@ -130,6 +123,14 @@ class MessengerTest extends TestCase
         self::assertEquals('default', $record['queue_name']);
         self::assertNotEmpty($record['body']);
 
+        /** This can't actually run in a test, of course.
+        $worker = new Worker(
+            [$doctrineTransport],
+            $bus,
+        );
+//sleep(2);
+        $worker->run();
+         */
     }
 }
 
