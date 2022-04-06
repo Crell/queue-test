@@ -51,7 +51,7 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @test-disabled
+     * @test
      */
     public function with_send(): void
     {
@@ -72,25 +72,28 @@ class MessengerTest extends TestCase
 
         $phpSerializer = new PhpSerializer();
 
+        $doctrineConnection = new Connection([
+            'table_name' => 'messages',
+            'queue_name' => 'default',
+            'auto_setup' => true,
+        ], $dbConn);
+
         $doctrineTransport =  new DoctrineTransport(
-            new Connection([
-                'table_name' => 'messages',
-                'queue_name' => 'default',
-                'auto_setup' => true,
-            ], DriverManager::getConnection([
-                'url' => 'sqlite:///db.sqlite',
-            ])),
+            $doctrineConnection,
             $phpSerializer,
         );
 
+        $doctrineFailedConnection = new Connection([
+            'table_name' => 'messages',
+            'queue_name' => 'failed',
+            'auto_setup' => true,
+        ], $dbConn);
+
+        $doctrineConnection->setup();
+        $doctrineFailedConnection->setup();
+
         $doctrineFailedTransport = new DoctrineTransport(
-            new Connection([
-                'table_name' => 'messages',
-                'queue_name' => 'failed',
-                'auto_setup' => true,
-            ], DriverManager::getConnection([
-                'url' => 'sqlite:///db.sqlite',
-            ])),
+            $doctrineFailedConnection,
             $phpSerializer,
         );
 
@@ -110,12 +113,23 @@ class MessengerTest extends TestCase
 
         $bus->dispatch(new TestMessage('Hello World'));
 
-        $result = $dbConn->executeQuery("SELECT * FROM queue");
-        $data = $result->fetchAssociative();
-        var_dump($data);
+//        $result = $dbConn->executeQuery("SHOW TABLES");
+//        $data = $result->fetchAllAssociative();
+//        var_dump($data);
+
+//        $data = $dbConn->executeQuery("SELECT * FROM messages")->fetchAllAssociative();
+//        var_dump($data);
 
         // It should not have made it through to the handler, which runs immediately.
         self::assertArrayNotHasKey('debug', $logger->messages);
+
+        // But there should now a record in the queue table.
+        $count = $dbConn->executeQuery("SELECT COUNT(*) FROM messages")->fetchOne();
+        self::assertEquals(1, $count);
+        $record = $dbConn->executeQuery("SELECT * FROM messages")->fetchAssociative();
+        self::assertEquals('default', $record['queue_name']);
+        self::assertNotEmpty($record['body']);
+
     }
 }
 
