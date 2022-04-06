@@ -1,7 +1,10 @@
 {
-    "name": "crell/*",
+    "name": "crell/qe-test",
     "require": {
-        "php": "~8.0"
+        "php": "~8.0",
+        "symfony/messenger": "^5.4",
+        "psr/log": "^3.0",
+        "psr/container": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -11,13 +14,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Crell\\Foo\\": "src"
+            "Crell\\QueueTest\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Crell\\Foo\\": "tests",
-            "Crell\\Foo\\Benchmarks\\": "benchmarks"
+            "Crell\\QueueTest\\": "tests",
+            "Crell\\QueueTest\\Benchmarks\\": "benchmarks"
         }
     }
 }
