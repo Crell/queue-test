@@ -128,7 +128,7 @@ class MessengerTest extends TestCase
             [$doctrineTransport],
             $bus,
         );
-//sleep(2);
+
         $worker->run();
          */
     }
