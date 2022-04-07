@@ -9,7 +9,7 @@ use Enqueue\Dbal\ManagerRegistryConnectionFactory;
 use Enqueue\Null\NullConnectionFactory;
 use Interop\Queue\ConnectionFactory;
 use PHPUnit\Framework\TestCase;
-use Doctrine\Persistence\ManagerRegistry;
+//use Doctrine\Persistence\ManagerRegistry;
 
 class EnqueueTest extends TestCase
 {
