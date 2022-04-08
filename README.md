@@ -1,6 +1,14 @@
 # Queue test
 
-Just messing about with queue systems. Do not use.
+Casual research with Queue systems in PHP.  Not even slightly maintained.
+
+To run:
+
+* `git clone` the repository
+* Copy `default-.env` to `.env`
+* Run `make shell` to start Docker compose and switch into its shell
+* Run `composer install`
+* Run `vendor/bin/phpunit` to see that the basic demo tests work.
 
 A related Symfony example: https://github.com/weaverryan/messenger-standalone/
 
